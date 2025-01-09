@@ -1,16 +1,28 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System;
 
-public class InputManager : MonoBehaviour
+public class InputManager : MonoBehaviour, GameInput.IGameplayActions
 {
-    // Update is called once per frame
-    void Update()
+    public GameInput gameInput;
+    void Start()
     {
-        if (Keyboard.current.spaceKey.wasPressedThisFrame)
+        
+        gameInput = new GameInput();
+        gameInput.Gameplay.SetCallbacks(this);
+        gameInput.Gameplay.Enable();
+    }
+    #region Public Actions
+
+    private Action JumpEvent;
+
+    #endregion
+
+    public void OnJump(InputAction.CallbackContext context)
+    {
+        if (context.performed)
         {
-            Debug.Log("Space");
+            Debug.Log("Jump");
         }
     }
 }
