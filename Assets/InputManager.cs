@@ -5,6 +5,7 @@ using System;
 public class InputManager : MonoBehaviour, GameInput.IGameplayActions
 {
     public GameInput gameInput;
+    public GameObject player;
     void Start()
     {
         
@@ -22,7 +23,14 @@ public class InputManager : MonoBehaviour, GameInput.IGameplayActions
     {
         if (context.performed)
         {
-            Debug.Log("Jump");
+            Debug.Log("Jump Performed");
+            Actions.jumpReact += movePlayer;
+            Actions.jumpReact?.Invoke();
         }
+
+    }
+    public void movePlayer()
+    {
+        player.SetActive(false);
     }
 }
