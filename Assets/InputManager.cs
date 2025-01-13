@@ -1,11 +1,20 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System;
-
+using UnityEditor;
+static class InputActions
+{
+    public static Action jumpReact;
+    public static Action jumpDown;
+    public static Action interact;
+    public static Action q;
+}
 public class InputManager : MonoBehaviour, GameInput.IGameplayActions
 {
     public GameInput gameInput;
     public GameObject player;
+    public GameObject interacter;
+    public Renderer qObject;
     void Start()
     {
         
@@ -13,24 +22,74 @@ public class InputManager : MonoBehaviour, GameInput.IGameplayActions
         gameInput.Gameplay.SetCallbacks(this);
         gameInput.Gameplay.Enable();
     }
-    #region Public Actions
-
-    private Action JumpEvent;
-
-    #endregion
-
+    public void OnInteract(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            moveBoxOut();
+        }
+        if (context.canceled)
+        {
+            moveBoxIn();
+        }
+    }
+    public void OnQ(InputAction.CallbackContext context)
+    { 
+        if (context.started)
+        {
+            Qstarted();
+        }
+        if (context.performed)
+        {
+            Qperformed();
+        }
+        if (context.canceled)
+        {
+            Qcanceled();
+        }
+    }
     public void OnJump(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
-            Debug.Log("Jump Performed");
-            Actions.jumpReact += movePlayer;
-            Actions.jumpReact?.Invoke();
+            InputActions.jumpDown -= jumpDown;
+            InputActions.jumpReact += jumpUp;
+            InputActions.jumpReact?.Invoke();
+        }
+        if (context.canceled)
+        {
+            InputActions.jumpReact -= jumpUp;
+            InputActions.jumpDown += jumpDown;
+            InputActions.jumpDown?.Invoke();
         }
 
     }
-    public void movePlayer()
+    public void moveBoxOut()
     {
-        player.SetActive(false);
+        interacter.SetActive(false);
+    }
+    public void moveBoxIn()
+    {
+        interacter.SetActive(true);
+    }
+    public void jumpUp()
+    {
+        player.transform.position += new Vector3(0, 2, 0);
+    }
+    public void jumpDown()
+    {
+        player.transform.position -= new Vector3(0, 2, 0);
+    }
+    public void Qstarted()
+    {
+        qObject.material.color = Color.blue;
+    }
+    public void Qperformed()
+    {
+        qObject.material.color = Color.green;
+    }
+    public void Qcanceled()
+    {
+        qObject.material.color = Color.red;
     }
 }
