@@ -37,15 +37,21 @@ public class InputManager : MonoBehaviour, GameInput.IGameplayActions
     { 
         if (context.started)
         {
-            Qstarted();
+            InputActions.q += Qstarted;
+            InputActions.q?.Invoke();
+            InputActions.q -= Qstarted;
         }
         if (context.performed)
         {
-            Qperformed();
+            InputActions.q += Qperformed;
+            InputActions.q?.Invoke();
+            InputActions.q -= Qperformed;
         }
         if (context.canceled)
         {
-            Qcanceled();
+            InputActions.q += Qcanceled;
+            InputActions.q?.Invoke();
+            InputActions.q -= Qcanceled;
         }
     }
     public void OnJump(InputAction.CallbackContext context)
